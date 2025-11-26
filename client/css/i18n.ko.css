@@ -1,0 +1,12 @@
+.lang-ko h4 {
+  font-size: 23px;
+}
+.lang-ko button {
+  font-size: 14px;
+}
+.lang-ko input[type="submit"] {
+  font-size: 14px;
+}
+.lang-ko .btn-toggle-status {
+  font-size: 12px;
+}

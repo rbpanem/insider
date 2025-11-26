@@ -1,0 +1,378 @@
+﻿<head>
+  <meta charset="utf-8">
+  <title>Insider</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link href="https://fonts.googleapis.com/css?family=Alef|Oswald|Open+Sans" rel="stylesheet"  media="none" onload="if(media!='all')media='all'">
+
+  <link rel="stylesheet" href="css/normalize.css" type="text/css"  media="none" onload="if(media!='all')media='all'">
+  <link rel="stylesheet" href="css/skeleton.css" type="text/css"  media="none" onload="if(media!='all')media='all'">
+  <link rel="stylesheet" href="css/styles.css" type="text/css" media="none" onload="if(media!='all')media='all'">
+  <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+  <meta name="msapplication-TileColor" content="#e4007f">
+  <meta name="theme-color" content="#e4007f">
+
+</head>
+
+<body></body>
+
+<template name="main">
+  <div dir="{{ textDirection }}" class="container dir-{{textDirection}} lang-{{ language }}">
+    <div class="main-content">
+      {{> Template.dynamic template=whichView}}
+
+      <hr>
+
+      {{> footer }}
+    </div>
+  </div>
+</template>
+
+<template name="startMenu">
+  <div class="main-menu">
+    <h4>{{_ "ui.welcome to insider" }}</h4>
+	<img src="/img/{{_ "ui.logo-file"}}" class="logo">
+    <hr>
+    <div class="button-container">
+
+      <button id="btn-new-game">{{_ "ui.new game" }}</button>
+      <button id="btn-join-game">{{_ "ui.join game" }}</button>
+    </div>
+
+    {{# if alternativeURL }}
+      <p class="high-load-message">The site is currently experiencing very heavy load. If things seem slow or broken, try this alternative URL: <a href="{{ alternativeURL }}">{{ alternativeURL }}</a></p>
+    {{/if}}
+  </div>
+</template>
+
+<template name="lobby">
+  <h4>{{_ "ui.waiting for players" }}</h4>
+
+  <div class="access-code">
+    {{_ "ui.access code" }}:
+    <span>{{ game.accessCode }}</span>
+  </div>
+
+  <div class="access-buttons">
+    <div class="tooltip">
+      <img src="/icons/copy.svg" class="icon" href="javascript:void(0);" id="copyAccessLinkImg" />
+      <span class="tooltiptext" id="copyAccessLinkTooltip">
+        {{_ "ui.copy access link"}}
+      </span>
+    </div>
+
+    <span class="access-button-separator"></span>
+
+    <a class="access-button btn-toggle-qrcode" href="javascript:void(0);">
+      <img src="/icons/qrcode.svg" class="icon" />
+    </a>
+
+    <span class="access-button-separator"></span>
+
+    <a class="access-button btn-send-access-code-email" href='mailto:?subject={{_ "ui.join my game" }}&body=https://insider.herokuapp.com/{{ accessLink }}'>
+      <img src="/icons/envelope-open.svg" class="icon" />
+    </a>
+
+  <div class="qrcode-container" style="display: none;">
+    <div id="qrcode" class="qrcode"></div>
+
+    <div id="access-link" class="access-link">
+      <a href="{{ accessLink }}">{{ siteUrl }}/{{ accessLink }}</a>
+    </div>
+  </div>
+</div>
+
+  <hr>
+
+  <ol class="lobby-player-list">
+    {{#each players }}
+      <li>
+        {{ name }}
+
+        {{#if isCurrent }}
+          <a href="#" class="btn-edit-player" data-player-id="{{ _id }}">
+            <img src="/icons/pencil-alt.svg" class="icon"/>
+          </a>
+        {{else}}
+          <a href="#" class="btn-remove-player" data-player-id="{{ _id }}">
+              <img src="/icons/window-close.svg" class="icon"/>
+          </a>
+        {{/if}}
+      </li>
+    {{/each}}
+  </ol>
+
+  <hr>
+
+  <div class="variants-container">
+    <h4>Variants</h4>
+    <div class="variant">
+      <div class="tooltip">
+        <span class="tooltiptext" id="playWithAllInsidersTooltip">{{_ "ui.all insiders tooltip" }}</span>
+          <label for="use-all-insiders-variant" id="all-insiders-variant-label">
+            <input type="checkbox" id="use-all-insiders-variant">
+            {{{_ "ui.play with the all-insiders variant"}}}
+          </label>
+      </div>
+    </div>
+    <div class="variant">
+      <div class="tooltip">
+        <span class="tooltiptext" id="playWithFollowerTooltip">{{_ "ui.follower tooltip" }}</span>
+          <label for="use-follower-variant" id="follower-variant-label">
+            <input type="checkbox" id="use-follower-variant">
+            {{{_ "ui.play with the follower variant"}}}
+          </label>
+      </div>
+    </div>
+  </div>
+
+<table>
+<tr><td>
+{{_ "ui.choose own word"}}
+</td><td>
+<div>
+	<input type="text" id="user-word" name="userWord" placeholder='{{_ "ui.enter word" }}'>
+<BR>
+	<button class="btn-submit-user-word">{{_ "ui.submit user word" }}</button>
+</div>
+</td>
+</tr>
+<tr>
+<td>
+{{_ "ui.let us choose"}}
+</td>
+<td>
+    <button class="btn-start">{{_ "ui.start game" }}</button>
+</td>
+</tr>
+</table>
+
+<div class="button-container">
+    <button class="btn-leave">{{_ "ui.leave game" }}</button>
+</div>
+
+</template>
+
+<template name="gameView">
+  <h4><a href="#" class="game-countdown {{#if gameFinished }}finished{{/if}} {{#if game.paused }}paused{{/if}}">{{{ timeRemaining }}}</a></h4>
+
+  <div class="status-container">
+    <button class="btn-toggle-status">{{_ "ui.show hide" }}</button>
+	<table>
+	<tr><td class="status-container-content">
+    {{#if player.isInsider }}
+     <img src="/img/role-insider.png" width=80px height=80px>
+    {{else if player.isQuestionMaster}}
+      <img src="/img/role-question-master.png" width=80px height=80px>
+    {{else if player.isFollower}}
+        <img src="/img/role-follower.png" width=80px height=80px>
+      {{else }}
+        <img src="/img/role-commoner.png" width=80px height=80px>
+    {{/if}}
+	</td>
+	<td>
+    <div class="status-container-content">
+      {{#if player.isInsider }}
+	        <div class="player-status player-status-insider"> {{_ "ui.you are the insider" }}</div>
+        <div class="current-role">
+          <div class="current-word">
+            <div class="current-word-header">
+              {{_ "ui.the word" }}:
+            </div>
+            <div class="current-word-text">
+              <strong>{{_ game.word }}</strong>
+            </div>
+          </div>
+        </div>
+      {{else if player.isQuestionMaster}}
+          <div class="player-status player-status-question-master">{{{_ "ui.you are the question master" }}}</div>
+          <div class="current-word">
+            <div class="current-word-header">
+              {{_ "ui.the word" }}:
+            </div>
+            <div class="current-word-text">
+              <strong>{{_ game.word }}</strong>
+            </div>
+          </div>
+      {{else if player.isFollower}}
+        <div class="player-status player-status-insider"> {{_ "ui.you are the follower" }}</div>
+        <div class="current-role">
+          <div class="current-word">
+            <div class="current-word-header">
+              {{_ "ui.the insider is" }} {{_ game.insiderName }}
+            </div>
+            <div class="current-word-text">
+              <strong>{{_ "ui.follower instructions" }}</strong>
+            </div>
+          </div>
+        </div>
+      {{else}}
+          <div class="player-status player-status-commoner">{{{_ "ui.you are not the insider" }}}</div>
+      {{/if}}
+    </div>
+</td>
+</tr>
+</table>
+  </div>
+
+  <h5>{{_ "ui.players" }}</h5>
+  <ul class="ingame-player-list">
+    {{#each players }}
+      <li>
+        <div class="player-name">
+          {{ name }}
+          {{#if isQuestionMaster}}
+            <div class="question-master-indicator">{{{_ "ui.question master indicator" }}}</div>
+          {{else if player.isFollower}}
+            {{#if isInsider}}
+              <div class="question-master-indicator">{{{_ "ui.insider indicator" }}}</div>
+            {{/if}}
+          {{/if}}
+        </div>
+      </li>
+    {{/each}}
+  </ul>
+  <h4>Variants:</h4>
+  <div class="variants-container">
+    {{#if game.usingFollowerVariant}}
+      {{{_ "ui.follower variant used" }}}
+    {{/if}}
+    {{#if game.usingAllInsidersVariant}}
+      {{{_ "ui.all insiders variant used"}}}
+    {{/if}}
+  </div>
+  <div class="u-cf"></div>
+  
+<!--
+  <h5>{{_ "ui.location reference" }}</h5>
+  <ul class="location-list">
+    {{#each locations}}
+      <li>
+        <div class="location-name">{{_ name }}</div>
+      </li>
+    {{/each}}
+  </ul>
+-->    
+  {{#if player.isQuestionMaster}}
+    <button id="btn-word-guessed" class="btn-word-guessed">
+        <img src="/icons/hourglass-start.svg" id="hourglass" class="icon">
+           {{_ "ui.word guessed"}}</button>
+  {{/if}}
+  <hr>
+
+  <div class="button-container">
+    <button class="btn-end">{{_ "ui.end game" }}</button>
+    <button class="btn-leave">{{_ "ui.leave game" }}</button>
+  </div>
+
+  <script type="text/javascript">
+    var sc_project=12248875; 
+    var sc_invisible=1; 
+    var sc_security="f1acb2d6"; 
+    </script>
+    <script type="text/javascript"
+    src="https://www.statcounter.com/counter/counter.js"
+    async media="none" onload="if(media!='all')media='all'"></script>
+    <noscript><div class="statcounter"><a title="Web Analytics"
+    href="https://statcounter.com/" target="_blank"><img
+    class="statcounter"
+    src="https://c.statcounter.com/12248875/0/f1acb2d6/1/"
+    alt="Web Analytics"></a></div></noscript>
+</template>
+
+<template name="createGame">
+  <h4>
+    {{#if isLoading }}
+      <span class="spinner"></span>
+    {{else}}
+      {{_ "ui.welcome to insider" }}
+    {{/if}}
+  </h4>
+
+  <hr>
+
+  <form id="create-game">  
+    <div class="">
+      <input type="text" id="player-name" name="playerName" placeholder='{{_ "ui.enter your name" }}'>
+
+      <div class="button-container">
+        <input type="submit" value='{{_ "ui.create game" }}'>
+        <button class="btn-back">{{_ "ui.back" }}</button>
+      </div>
+    </div>
+  </form>
+</template>
+
+<template name="joinGame">
+  <h4 class="join-game">
+    {{#if isLoading }}
+      <span class="spinner"></span>
+    {{else}}
+      {{_ "ui.welcome to insider" }}
+    {{/if}}
+  </h4>
+
+  <hr>
+
+  <form id="join-game">  
+    <div>
+      <input autocorrect="off" autocapitalize="off" type="number" id="access-code" name="accessCode" placeholder='{{_ "ui.enter an access code" }}'>
+      <input type="text" id="player-name" name="playerName" placeholder='{{_ "ui.enter your name" }}'>
+
+      {{> flashMessages}}
+
+      <div class="button-container">
+        <input type="submit" value='{{_ "ui.join" }}'>
+        <button class="btn-back">{{_ "ui.back" }}</button>
+      </div>
+    </div>
+  </form>
+</template>
+
+<template name="footer">
+  {{#if languages }}
+    <div dir="ltr" class="languages">
+      <select class="language-select">
+        {{#each languages }}
+            <option value="{{code}}" {{selected}}>{{toCapitalCase languageDetails.name}}</option>
+        {{/each}}
+      </select>
+      <ul class="language-list">
+        {{#each languages }}
+          <li>
+            <a class="btn-set-language" href="#" data-language="{{code}}">{{toCapitalCase languageDetails.name}}</a>
+          </li>
+        {{/each}}
+      </ul>
+    </div>
+  {{/if}}
+
+  <div class="footer">
+{{_ "ui.credits"}}
+<a href="http://oinkgms.com/">Oink Games</a>
+<BR>
+{{_ "ui.footer"}}
+  </div>
+<div class="author">
+  {{{_ "ui.translation credits"}}}
+  <BR>
+  {{_ "ui.Author"}}
+<a href='https://boardgamegeek.com/geekmail/compose?touser={{authorBggUsername}}'>{{authorBggUsername}}@BGG</a> <BR>
+Or email me <a href="mailto:{{authorEmail}}">{{authorEmail}}</a>
+</div>
+
+<div><a href='{{_ "ui.github link" }}'><img src="/icons/github.png">View on Github</a></div>
+</template>
